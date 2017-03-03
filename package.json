@@ -7,6 +7,8 @@
     "url": "https://github.com/hacksalot/HackMyResume.git"
   },
   "scripts": {
+    "go":"node dist/cli/index.js build resume.json",
+    "go2":"node dist/cli/index.js build resume.json -o options-translate.json",
     "test": "grunt clean:test && mocha",
     "grunt": "grunt"
   },
