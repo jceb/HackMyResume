@@ -109,6 +109,19 @@ Definition of the HtmlPdfCLIGenerator class.
       sourcePath = SLASH(PATH.relative(process.cwd(), tempFile));
       destPath = SLASH(PATH.relative(process.cwd(), fOut));
       SPAWN('phantomjs', [scriptPath, sourcePath, destPath], false, on_error, this);
+    },
+
+    /**
+    Generate a PDF from HTML using headless google chome (v59 or newer).
+    Google Chrome must be installed and path-accessible.
+     */
+    chrome: function(markup, fOut, on_error) {
+      var sourcePath, tempFile;
+      tempFile = fOut.replace(/\.pdf$/i, '.pdf.html');
+      FS.writeFileSync(tempFile, markup, 'utf8');
+      sourcePath = "file://" + SLASH(PATH.relative(process.cwd(), tempFile));
+      SPAWN('Google Chrome Canary', ['--headless', '--disable-gpu', '--print-to-pdf', sourcePath], true, on_error, this);
+      FS.renameSync('output.pdf', fOut);
     }
   };
 

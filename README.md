@@ -62,8 +62,8 @@ Alternately, install the latest bleeding-edge version (updated daily):
 HackMyResume tries not to impose a specific PDF engine requirement on
 the user, but will instead work with whatever PDF engines you have installed.
 
-Currently, HackMyResume's PDF generation requires either [Phantom.js][2] or
-[wkhtmltopdf][3] to be installed on your system and the `phantomjs` and/or
+Currently, HackMyResume's PDF generation requires [Google Chrome](https://developers.google.com/web/updates/2017/04/headless-chrome) (with headless support in v59 or later), [Phantom.js][2], or
+[wkhtmltopdf][3] to be installed on your system and the `Google Chrome Canary`, `phantomjs` and/or
 `wkhtmltopdf` binaries to be accessible on your PATH. This is an optional
 requirement for users who care about PDF formats. If you don't care about PDF
 formats, skip this step.

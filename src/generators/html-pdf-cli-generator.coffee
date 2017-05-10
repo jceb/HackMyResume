@@ -90,3 +90,19 @@ engines =
     destPath = SLASH PATH.relative( process.cwd(), fOut)
     SPAWN 'phantomjs', [ scriptPath, sourcePath, destPath ], false, on_error, @
     return
+
+
+
+  ###*
+  Generate a PDF from HTML using headless google chome (v59 or newer).
+  Google Chrome must be installed and path-accessible.
+  ###
+  chrome: ( markup, fOut, on_error ) ->
+    # Save the markup to a temporary file
+    tempFile = fOut.replace /\.pdf$/i, '.pdf.html'
+    FS.writeFileSync tempFile, markup, 'utf8'
+    sourcePath = "file://" + SLASH PATH.relative( process.cwd(), tempFile)
+    SPAWN 'Google Chrome Canary', [ '--headless', '--disable-gpu', '--print-to-pdf', sourcePath ], true, on_error, @
+
+    FS.renameSync('output.pdf', fOut)
+    return
