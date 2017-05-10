@@ -13,6 +13,7 @@ SLASH = require 'slash'
 _ = require 'underscore'
 HMSTATUS = require '../core/status-codes'
 SPAWN = require '../utils/safe-spawn'
+HTMLPDF = require 'html-pdf-chrome'
 
 
 ###*
@@ -98,11 +99,4 @@ engines =
   Google Chrome must be installed and path-accessible.
   ###
   chrome: ( markup, fOut, on_error ) ->
-    # Save the markup to a temporary file
-    tempFile = fOut.replace /\.pdf$/i, '.pdf.html'
-    FS.writeFileSync tempFile, markup, 'utf8'
-    sourcePath = "file://" + SLASH PATH.relative( process.cwd(), tempFile)
-    SPAWN 'Google Chrome Canary', [ '--headless', '--disable-gpu', '--print-to-pdf', sourcePath ], true, on_error, @
-
-    FS.renameSync('output.pdf', fOut)
-    return
+    HTMLPDF.create(markup).then((pdf) -> pdf.toFile(fOut))

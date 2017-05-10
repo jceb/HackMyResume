@@ -6,7 +6,7 @@ Definition of the HtmlPdfCLIGenerator class.
  */
 
 (function() {
-  var FS, HMSTATUS, HtmlPdfCLIGenerator, PATH, SLASH, SPAWN, TemplateGenerator, _, engines,
+  var FS, HMSTATUS, HTMLPDF, HtmlPdfCLIGenerator, PATH, SLASH, SPAWN, TemplateGenerator, _, engines,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
@@ -23,6 +23,8 @@ Definition of the HtmlPdfCLIGenerator class.
   HMSTATUS = require('../core/status-codes');
 
   SPAWN = require('../utils/safe-spawn');
+
+  HTMLPDF = require('html-pdf-chrome');
 
 
   /**
@@ -116,12 +118,9 @@ Definition of the HtmlPdfCLIGenerator class.
     Google Chrome must be installed and path-accessible.
      */
     chrome: function(markup, fOut, on_error) {
-      var sourcePath, tempFile;
-      tempFile = fOut.replace(/\.pdf$/i, '.pdf.html');
-      FS.writeFileSync(tempFile, markup, 'utf8');
-      sourcePath = "file://" + SLASH(PATH.relative(process.cwd(), tempFile));
-      SPAWN('Google Chrome Canary', ['--headless', '--disable-gpu', '--print-to-pdf', sourcePath], true, on_error, this);
-      FS.renameSync('output.pdf', fOut);
+      return HTMLPDF.create(markup).then(function(pdf) {
+        return pdf.toFile(fOut);
+      });
     }
   };
 
