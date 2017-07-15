@@ -63,6 +63,7 @@
     "fs-extra": "^0.26.4",
     "handlebars": "^4.0.5",
     "html": "0.0.10",
+    "html-pdf-chrome": "0.0.2",
     "is-my-json-valid": "^2.12.4",
     "json-lint": "^0.1.0",
     "jsonlint": "^1.6.2",

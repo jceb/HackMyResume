@@ -13,6 +13,7 @@ SLASH = require 'slash'
 _ = require 'underscore'
 HMSTATUS = require '../core/status-codes'
 SPAWN = require '../utils/safe-spawn'
+HTMLPDF = require 'html-pdf-chrome'
 
 
 ###*
@@ -113,3 +114,10 @@ engines =
 
     SPAWN 'weasyprint', [tempFile, fOut], false, on_error, @
     return
+
+  ###*
+  Generate a PDF from HTML using headless google chome (v59 or newer).
+  Google Chrome must be installed and path-accessible.
+  ###
+  chrome: ( markup, fOut, on_error ) ->
+    HTMLPDF.create(markup).then((pdf) -> pdf.toFile(fOut))

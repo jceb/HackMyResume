@@ -6,7 +6,7 @@ Definition of the HtmlPdfCLIGenerator class.
  */
 
 (function() {
-  var FS, HMSTATUS, HtmlPdfCLIGenerator, PATH, SLASH, SPAWN, TemplateGenerator, _, engines,
+  var FS, HMSTATUS, HTMLPDF, HtmlPdfCLIGenerator, PATH, SLASH, SPAWN, TemplateGenerator, _, engines,
     extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     hasProp = {}.hasOwnProperty;
 
@@ -23,6 +23,8 @@ Definition of the HtmlPdfCLIGenerator class.
   HMSTATUS = require('../core/status-codes');
 
   SPAWN = require('../utils/safe-spawn');
+
+  HTMLPDF = require('html-pdf-chrome');
 
 
   /**
@@ -130,6 +132,16 @@ Definition of the HtmlPdfCLIGenerator class.
       tempFile = fOut.replace(/\.pdf$/i, '.pdf.html');
       FS.writeFileSync(tempFile, markup, 'utf8');
       SPAWN('weasyprint', [tempFile, fOut], false, on_error, this);
+    },
+
+    /**
+    Generate a PDF from HTML using headless google chome (v59 or newer).
+    Google Chrome must be installed and path-accessible.
+     */
+    chrome: function(markup, fOut, on_error) {
+      return HTMLPDF.create(markup).then(function(pdf) {
+        return pdf.toFile(fOut);
+      });
     }
   };
 
