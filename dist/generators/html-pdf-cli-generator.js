@@ -138,8 +138,25 @@ Definition of the HtmlPdfCLIGenerator class.
     Generate a PDF from HTML using headless google chome (v59 or newer).
     Google Chrome must be installed and path-accessible.
      */
-    chrome: function(markup, fOut, on_error) {
-      return HTMLPDF.create(markup).then(function(pdf) {
+    chrome: function(markup, fOut, opts, on_error) {
+      var chrome_options;
+      chrome_options = _.extend({
+        'landscape': false,
+        'displayHeaderFooter': false,
+        'printBackground': false,
+        'scale': 1,
+        'paperWidth': 8.5,
+        'paperHeight': 11,
+        'marginTop': 0.4,
+        'marginBottom': 0.4,
+        'marginLeft': 0.4,
+        'marginRight': 0.4,
+        'pageRanges': ''
+      }, opts.chrome);
+      console.log(chrome_options);
+      HTMLPDF.create(markup, {
+        'printOptions': chrome_options
+      }).then(function(pdf) {
         return pdf.toFile(fOut);
       });
     }

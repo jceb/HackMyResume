@@ -119,5 +119,23 @@ engines =
   Generate a PDF from HTML using headless google chome (v59 or newer).
   Google Chrome must be installed and path-accessible.
   ###
-  chrome: ( markup, fOut, on_error ) ->
-    HTMLPDF.create(markup).then((pdf) -> pdf.toFile(fOut))
+  chrome: ( markup, fOut, opts, on_error ) ->
+    # Prepare wkhtmltopdf arguments.
+    # For all the options see https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
+    chrome_options = _.extend(
+      {
+          'landscape': false,
+          'displayHeaderFooter': false,
+          'printBackground': false,
+          'scale': 1,
+          'paperWidth': 8.5,
+          'paperHeight': 11,
+          'marginTop': 0.4,
+          'marginBottom': 0.4,
+          'marginLeft': 0.4,
+          'marginRight': 0.4,
+          'pageRanges': '',
+      }, opts.chrome)
+    console.log(chrome_options)
+    HTMLPDF.create(markup, {'printOptions': chrome_options}).then((pdf) -> pdf.toFile(fOut))
+    return
