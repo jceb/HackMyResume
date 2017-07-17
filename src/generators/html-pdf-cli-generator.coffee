@@ -136,6 +136,5 @@ engines =
           'marginRight': 0.4,
           'pageRanges': '',
       }, opts.chrome)
-    console.log(chrome_options)
     HTMLPDF.create(markup, {'printOptions': chrome_options}).then((pdf) -> pdf.toFile(fOut))
     return
