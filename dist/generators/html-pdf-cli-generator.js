@@ -148,7 +148,7 @@ Definition of the HtmlPdfCLIGenerator class.
         'paperWidth': 8.5,
         'paperHeight': 11,
         'marginTop': 0.4,
-        'marginBottom': 0.4,
+        'marginBottom': 0.56,
         'marginLeft': 0.4,
         'marginRight': 0.4,
         'pageRanges': ''
