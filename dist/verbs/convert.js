@@ -98,7 +98,7 @@ Implementation of the 'convert' verb for HackMyResume.
       return rinfo;
     }
     s = rinfo.rez;
-    srcFmt = ((s.basics && s.basics.imp) || s.imp).orgFormat === 'JRS' ? 'JRS' : 'FRESH';
+    srcFmt = s.basics ? 'JRS' : 'FRESH';
     targetFormat = srcFmt === 'JRS' ? 'FRESH' : 'JRS';
     this.stat(HMEVENT.beforeConvert, {
       srcFile: rinfo.file,

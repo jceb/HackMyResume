@@ -68,9 +68,7 @@ _convertOne = (src, dst, idx) ->
     return rinfo
 
   s = rinfo.rez
-  srcFmt =
-    if ((s.basics && s.basics.imp) || s.imp).orgFormat == 'JRS'
-    then 'JRS' else 'FRESH'
+  srcFmt = if s.basics then 'JRS' else 'FRESH'
   targetFormat = if srcFmt == 'JRS' then 'FRESH' else 'JRS'
 
   this.stat HMEVENT.beforeConvert,
