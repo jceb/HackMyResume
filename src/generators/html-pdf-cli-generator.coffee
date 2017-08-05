@@ -136,5 +136,7 @@ engines =
           'marginRight': 0.4,
           'pageRanges': '',
       }, opts.chrome)
-    HTMLPDF.create(markup, {'printOptions': chrome_options}).then((pdf) -> pdf.toFile(fOut))
+    tempFile = fOut.replace /\.pdf$/i, '.pdf.html'
+    FS.writeFileSync tempFile, markup, 'utf8'
+    HTMLPDF.create('file://' + tempFile, {'printOptions': chrome_options}).then((pdf) -> pdf.toFile(fOut))
     return

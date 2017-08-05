@@ -139,7 +139,7 @@ Definition of the HtmlPdfCLIGenerator class.
     Google Chrome must be installed and path-accessible.
      */
     chrome: function(markup, fOut, opts, on_error) {
-      var chrome_options;
+      var chrome_options, tempFile;
       chrome_options = _.extend({
         'landscape': false,
         'displayHeaderFooter': false,
@@ -153,7 +153,9 @@ Definition of the HtmlPdfCLIGenerator class.
         'marginRight': 0.4,
         'pageRanges': ''
       }, opts.chrome);
-      HTMLPDF.create(markup, {
+      tempFile = fOut.replace(/\.pdf$/i, '.pdf.html');
+      FS.writeFileSync(tempFile, markup, 'utf8');
+      HTMLPDF.create('file://' + tempFile, {
         'printOptions': chrome_options
       }).then(function(pdf) {
         return pdf.toFile(fOut);
