@@ -303,6 +303,36 @@ GenericHelpers = module.exports =
     return if val then (val.charAt(0).toUpperCase() + val.slice(1)) else val
 
 
+  ###*
+  Display a user-overridable section title for a FRESH resume theme. Use this in
+  lieue of hard-coding section titles.
+
+  Usage:
+
+      {{contactInformation "contactDetail"}}
+      {{contactInformation "contactDetail" "contactInformation"}}
+
+  Example:
+
+      {{contactInformation "E-Mail"}}
+      {{contactInformation "E-Mail" "Electronic Mail"}}
+
+  @param detail The name of the contact detail.
+  @param sect_information The theme-specified detail. May be replaced by the
+  user.
+  @method contactInformation
+  ###
+  contactInformation: ( detail, information ) ->
+
+    # If not provided by the user, information should default to detail. ps.
+    # Handlebars silently passes in the options object to the last param,
+    # where in Underscore information will be null/undefined, so we check both.
+    information = (information && String.is(information) && information) || detail
+
+    # If there's a contact information override, use it.
+    ( this.opts.cinformation &&
+      this.opts.cinformation[ detail.toLowerCase().trim() ] ) ||
+      information;
 
   ###*
   Display a user-overridable section title for a FRESH resume theme. Use this in

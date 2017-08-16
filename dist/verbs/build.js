@@ -241,6 +241,7 @@ Implementation of the 'build' verb for HackMyResume.
     _opts.pdf = opts.pdf;
     _opts.wrap = opts.wrap || 60;
     _opts.stitles = opts.sectionTitles;
+    _opts.cinformation = opts.contactInformation;
     _opts.tips = opts.tips;
     _opts.errHandler = opts.errHandler;
     _opts.noTips = opts.noTips;

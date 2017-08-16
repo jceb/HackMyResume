@@ -326,6 +326,30 @@ Generic template helper definitions for HackMyResume / FluentCV.
     
     Usage:
     
+        {{contactInformation "contactDetail"}}
+        {{contactInformation "contactDetail" "contactInformation"}}
+    
+    Example:
+    
+        {{contactInformation "E-Mail"}}
+        {{contactInformation "E-Mail" "Electronic Mail"}}
+    
+    @param detail The name of the contact detail.
+    @param sect_information The theme-specified detail. May be replaced by the
+    user.
+    @method contactInformation
+     */
+    contactInformation: function(detail, information) {
+      information = (information && String.is(information) && information) || detail;
+      return (this.opts.cinformation && this.opts.cinformation[detail.toLowerCase().trim()]) || information;
+    },
+
+    /**
+    Display a user-overridable section title for a FRESH resume theme. Use this in
+    lieue of hard-coding section titles.
+    
+    Usage:
+    
         {{sectionTitle "sectionName"}}
         {{sectionTitle "sectionName" "sectionTitle"}}
     
