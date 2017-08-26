@@ -24,7 +24,7 @@ Definition of the HtmlPdfCLIGenerator class.
 
   SPAWN = require('../utils/safe-spawn');
 
-  HTMLPDF = require('html-pdf-chrome');
+  HTMLPDF = require('puppeteer');
 
 
   /**
@@ -139,26 +139,37 @@ Definition of the HtmlPdfCLIGenerator class.
     Google Chrome must be installed and path-accessible.
      */
     chrome: function(markup, fOut, opts, on_error) {
-      var chrome_options, tempFile;
-      chrome_options = _.extend({
+      var chrome_launch_options, chrome_pdf_options, tempFile;
+      chrome_launch_options = _.extend({}, opts.chrome.launch);
+      chrome_pdf_options = _.extend({
+        'path': fOut,
         'landscape': false,
         'displayHeaderFooter': false,
         'printBackground': false,
+        'format': "A4",
         'scale': 1,
-        'paperWidth': 8.5,
-        'paperHeight': 11,
-        'marginTop': 0.4,
-        'marginBottom': 0.56,
-        'marginLeft': 0.4,
-        'marginRight': 0.4,
-        'pageRanges': ''
-      }, opts.chrome);
+        'width': '8.5in',
+        'height': '11in',
+        'pageRanges': '',
+        'margins': {
+          'top': '0.4in',
+          'bottom': '0.56in',
+          'left': '0.4in',
+          'right': ' 0.4in'
+        }
+      }, opts.chrome.pdf);
       tempFile = fOut.replace(/\.pdf$/i, '.pdf.html');
       FS.writeFileSync(tempFile, markup, 'utf8');
-      HTMLPDF.create('file://' + tempFile, {
-        'printOptions': chrome_options
-      }).then(function(pdf) {
-        return pdf.toFile(fOut);
+      HTMLPDF.launch(chrome_launch_options).then(function(browser) {
+        return browser.newPage().then(function(page) {
+          return page.goto('file://' + tempFile, {
+            waitUntil: 'networkidle'
+          }).then(function(response) {
+            return page.pdf(chrome_pdf_options).then(function(buffer) {
+              return browser.close();
+            });
+          });
+        });
       });
     }
   };

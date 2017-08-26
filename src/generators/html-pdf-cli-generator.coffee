@@ -13,7 +13,7 @@ SLASH = require 'slash'
 _ = require 'underscore'
 HMSTATUS = require '../core/status-codes'
 SPAWN = require '../utils/safe-spawn'
-HTMLPDF = require 'html-pdf-chrome'
+HTMLPDF = require 'puppeteer'
 
 
 ###*
@@ -121,22 +121,36 @@ engines =
   ###
   chrome: ( markup, fOut, opts, on_error ) ->
     # Prepare wkhtmltopdf arguments.
-    # For all the options see https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF
-    chrome_options = _.extend(
+    # For all launch options see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
+    # For all pdf options see https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagepdfoptions
+    chrome_launch_options = _.extend({}, opts.chrome.launch)
+    chrome_pdf_options = _.extend(
       {
+          'path': fOut,
           'landscape': false,
           'displayHeaderFooter': false,
           'printBackground': false,
+          'format': "A4",
           'scale': 1,
-          'paperWidth': 8.5,
-          'paperHeight': 11,
-          'marginTop': 0.4,
-          'marginBottom': 0.56,
-          'marginLeft': 0.4,
-          'marginRight': 0.4,
+          'width': '8.5in',
+          'height': '11in',
           'pageRanges': '',
-      }, opts.chrome)
+          'margins': {
+              'top': '0.4in',
+              'bottom': '0.56in',
+              'left': '0.4in',
+              'right':' 0.4in'
+          }
+      }, opts.chrome.pdf)
     tempFile = fOut.replace /\.pdf$/i, '.pdf.html'
     FS.writeFileSync tempFile, markup, 'utf8'
-    HTMLPDF.create('file://' + tempFile, {'printOptions': chrome_options}).then((pdf) -> pdf.toFile(fOut))
+    HTMLPDF.launch(chrome_launch_options).then((browser) ->
+      browser.newPage().then((page) ->
+        page.goto('file://' + tempFile, {waitUntil: 'networkidle'}).then((response) ->
+          page.pdf(chrome_pdf_options).then((buffer) ->
+              browser.close()
+          )
+        )
+      )
+    )
     return
