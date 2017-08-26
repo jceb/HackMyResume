@@ -135,7 +135,7 @@ engines =
           'width': '8.5in',
           'height': '11in',
           'pageRanges': '',
-          'margins': {
+          'margin': {
               'top': '0.4in',
               'bottom': '0.56in',
               'left': '0.4in',
