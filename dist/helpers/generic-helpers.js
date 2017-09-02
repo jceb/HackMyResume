@@ -71,7 +71,7 @@ Generic template helper definitions for HackMyResume / FluentCV.
           return momentDate.format(dtFormat);
         }
       }
-      return datetime || (typeof fallback === 'string' ? fallback : (fallback === true ? 'Present' : ''));
+      return datetime || (typeof fallback === 'string' ? fallback : (fallback === true ? this.opts.present || 'Present' : ''));
     },
 
     /**
@@ -600,7 +600,7 @@ Generic template helper definitions for HackMyResume / FluentCV.
     dateBTrim = dateB.trim().toLowerCase();
     reserved = ['current', 'present', 'now', ''];
     fmt = (fmt && String.is(fmt) && fmt) || 'YYYY-MM';
-    sep = (sep && String.is(sep) && sep) || ' — ';
+    sep = (sep && String.is(sep) && sep) || '—';
     if (_.contains(reserved, dateATrim)) {
       dateFrom = fallback || '???';
     } else {
@@ -608,19 +608,32 @@ Generic template helper definitions for HackMyResume / FluentCV.
       dateFrom = dateTemp.format(fmt);
     }
     if (_.contains(reserved, dateBTrim)) {
-      dateTo = fallback || 'Present';
+      dateTo = fallback || GenericHelpers.opts.present || 'Present';
     } else {
       dateTemp = FluentDate.fmt(dateB);
       dateTo = dateTemp.format(fmt);
     }
     if (dateFrom === dateTo) {
-      return dateFrom;
+      return {
+        'from': dateFrom
+      };
     } else if (dateFrom && dateTo) {
-      return dateFrom + sep + dateTo;
+      return {
+        'from': dateFrom,
+        'sep': sep,
+        'to': dateTo
+      };
     } else if (dateFrom || dateTo) {
-      return dateFrom || dateTo;
+      if (dateTo) {
+        return {
+          'to': dateTo
+        };
+      }
+      return {
+        'from': dateFrom
+      };
     }
-    return '';
+    return {};
   };
 
   skillLevelToIndex = function(lvl) {

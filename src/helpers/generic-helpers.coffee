@@ -68,7 +68,7 @@ GenericHelpers = module.exports =
     datetime ||
       if typeof fallback == 'string'
       then fallback
-      else (if fallback == true then 'Present' else '')
+      else (if fallback == true then this.opts.present || 'Present' else '')
 
 
 
@@ -567,7 +567,7 @@ _fromTo = ( dateA, dateB, fmt, sep, fallback ) ->
   reserved = ['current','present','now', '']
 
   fmt = (fmt && String.is(fmt) && fmt) || 'YYYY-MM'
-  sep = (sep && String.is(sep) && sep) || ' — '
+  sep = (sep && String.is(sep) && sep) || '—'
 
   if _.contains( reserved, dateATrim )
     dateFrom = fallback || '???'
@@ -576,19 +576,21 @@ _fromTo = ( dateA, dateB, fmt, sep, fallback ) ->
     dateFrom = dateTemp.format( fmt )
 
   if _.contains( reserved, dateBTrim )
-    dateTo = fallback || 'Present'
+    dateTo = fallback || GenericHelpers.opts.present || 'Present'
   else
     dateTemp = FluentDate.fmt( dateB )
     dateTo = dateTemp.format( fmt )
 
 
   if dateFrom == dateTo
-    return dateFrom
+    return {'from': dateFrom}
   else if dateFrom && dateTo
-    return dateFrom + sep + dateTo
+    return {'from': dateFrom, 'sep': sep, 'to': dateTo}
   else if dateFrom || dateTo
-    return dateFrom || dateTo
-  return ''
+    if dateTo
+        return {'to': dateTo}
+    return {'from': dateFrom}
+  return {}
 
 
 
