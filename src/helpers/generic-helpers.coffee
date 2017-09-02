@@ -68,7 +68,7 @@ GenericHelpers = module.exports =
     datetime ||
       if typeof fallback == 'string'
       then fallback
-      else (if fallback == true then this.opts.present || 'Present' else '')
+      else (if fallback == true then this.opts.datePresent || 'Present' else '')
 
 
 
@@ -576,7 +576,7 @@ _fromTo = ( dateA, dateB, fmt, sep, fallback ) ->
     dateFrom = dateTemp.format( fmt )
 
   if _.contains( reserved, dateBTrim )
-    dateTo = fallback || GenericHelpers.opts.present || 'Present'
+    dateTo = fallback || GenericHelpers.opts.datePresent || 'Present'
   else
     dateTemp = FluentDate.fmt( dateB )
     dateTo = dateTemp.format( fmt )

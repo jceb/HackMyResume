@@ -182,6 +182,7 @@ _prep = ( src, dst, opts ) ->
   _opts.sort = opts.sort
   _opts.wkhtmltopdf = opts.wkhtmltopdf
   _opts.chrome= opts.chrome
+  _opts.datePresent = opts.datePresent
   that = @
 
   # Set up callbacks for internal generators

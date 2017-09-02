@@ -71,7 +71,7 @@ Generic template helper definitions for HackMyResume / FluentCV.
           return momentDate.format(dtFormat);
         }
       }
-      return datetime || (typeof fallback === 'string' ? fallback : (fallback === true ? this.opts.present || 'Present' : ''));
+      return datetime || (typeof fallback === 'string' ? fallback : (fallback === true ? this.opts.datePresent || 'Present' : ''));
     },
 
     /**
@@ -608,7 +608,7 @@ Generic template helper definitions for HackMyResume / FluentCV.
       dateFrom = dateTemp.format(fmt);
     }
     if (_.contains(reserved, dateBTrim)) {
-      dateTo = fallback || GenericHelpers.opts.present || 'Present';
+      dateTo = fallback || GenericHelpers.opts.datePresent || 'Present';
     } else {
       dateTemp = FluentDate.fmt(dateB);
       dateTo = dateTemp.format(fmt);
